@@ -56,7 +56,7 @@ defmodule BeamTestbed.MixProject do
        depth: 1},
       {:daisyui,
        github: "saadeghi/daisyui",
-       tag: "v5.5.20",
+       tag: "v5.7.27",
        sparse: "packages/bundle",
        app: false,
        compile: false,
@@ -65,7 +65,7 @@ defmodule BeamTestbed.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
-      {:dns_cluster, "~> 0.2.0"},
+      {:dns_cluster, "~> 0.3.0"},
       {:bandit, "~> 1.5"}
     ]
   end
