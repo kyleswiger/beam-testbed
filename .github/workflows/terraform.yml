@@ -1,0 +1,31 @@
+# Plan on PRs that touch terraform/; apply is deliberately manual (see README)
+# until the stack has proven itself — a test stack should not self-apply.
+name: Terraform
+on:
+  pull_request:
+    paths: ["terraform/**"]
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.6"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+          aws-region: us-east-1
+      - run: terraform fmt -check -recursive
+      - run: terraform init -input=false
+      - run: terraform validate
+      - run: terraform plan -input=false -no-color -lock=false

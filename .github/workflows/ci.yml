@@ -1,0 +1,25 @@
+# Elixir gates from the shared reusable workflow. Each job is a separate
+# status check ("ci / format", "ci / test", ...) so the ruleset can require
+# them individually. No Postgres: this app has no Ecto.
+#
+# TODO(pin): switch @main to @v1.1.0 once aws-reusable-workflows releases it.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: kyleswiger/aws-reusable-workflows/.github/workflows/elixir-ci.yml@main
+    with:
+      sobelow: true
+      postgres: false
+      audit-blocking: true

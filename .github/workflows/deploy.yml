@@ -1,0 +1,48 @@
+# Build the release image once (native arm64 runner — QEMU cross-builds of the
+# BEAM JIT are unsupported), push it to ECR with provenance, then roll the ECS
+# service forward to that exact digest. Terraform owns the service's shape;
+# this workflow owns the running image.
+#
+# workflow_dispatch exists for the first deploy: after `terraform apply`
+# creates the ECR repo, role and service, run this once by hand to push the
+# first real image.
+#
+# TODO(pin): switch @main to @v1.1.0 once aws-reusable-workflows releases it.
+name: Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  image:
+    uses: kyleswiger/aws-reusable-workflows/.github/workflows/oci-build-push.yml@main
+    with:
+      registry: 495407107865.dkr.ecr.us-east-1.amazonaws.com
+      image: beam-testbed
+      platforms: linux/arm64
+      runner: ubuntu-24.04-arm
+    secrets:
+      AWS_GITHUB_ACTIONS_ROLE_ARN: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
+
+  deploy:
+    needs: image
+    uses: kyleswiger/aws-reusable-workflows/.github/workflows/ecs-deploy.yml@main
+    with:
+      cluster: beam-testbed
+      service: beam-testbed
+      container-name: app
+      image: ${{ needs.image.outputs.image-ref }}
+      environment: production
+      health-url: https://beam.kswiger.dev/healthz
+    secrets:
+      AWS_GITHUB_ACTIONS_ROLE_ARN: ${{ secrets.AWS_GITHUB_ACTIONS_ROLE_ARN }}
