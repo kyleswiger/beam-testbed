@@ -35,3 +35,12 @@ beam_testbed-*.tar
 npm-debug.log
 /assets/node_modules/
 
+
+# Terraform
+terraform/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform/backend.tf
+*.tfvars
+!terraform.tfvars.example

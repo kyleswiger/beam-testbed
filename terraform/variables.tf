@@ -24,9 +24,3 @@ variable "capacity_provider" {
   type        = string
   default     = "FARGATE_SPOT"
 }
-
-variable "tooling_ref" {
-  description = "aws-deployment-tooling git ref for the modules. Pin to a release tag once one exists that contains ecs-fargate-service."
-  type        = string
-  default     = "main"
-}

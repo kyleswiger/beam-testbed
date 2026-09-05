@@ -4,10 +4,13 @@
 # workflow owns the running image (ECR push + new task-definition revision).
 # Default VPC, public subnets, public IP: no NAT gateway, no VPC endpoints.
 
+# Module refs: bump both `?ref=` to the aws-deployment-tooling release tag that
+# contains ecs-fargate-service once PR #8 is released (Dependabot tracks it).
+
 # 1. The service. Spot because this is a test stack; flip to FARGATE for
 #    anything that must not be interrupted.
 module "app" {
-  source = "github.com/kyleswiger/aws-deployment-tooling//terraform-modules/ecs-fargate-service?ref=${var.tooling_ref}"
+  source = "github.com/kyleswiger/aws-deployment-tooling//terraform-modules/ecs-fargate-service?ref=0b3288767d4fc51f309a707f7947dd62a21814f6"
 
   name_prefix       = var.name_prefix
   container_name    = "app"
@@ -37,7 +40,7 @@ module "app" {
 # 2. Keyless CI role. The account already has the GitHub OIDC provider.
 #    Permissions are exactly what oci-build-push + ecs-deploy + terraform plan need.
 module "ci_role" {
-  source = "github.com/kyleswiger/aws-deployment-tooling//terraform-modules/github-oidc-role?ref=${var.tooling_ref}"
+  source = "github.com/kyleswiger/aws-deployment-tooling//terraform-modules/github-oidc-role?ref=0b3288767d4fc51f309a707f7947dd62a21814f6"
 
   name_prefix          = var.name_prefix
   github_repo          = var.github_repo
