@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # 0, not 1: the allowlist below grants `git log`/`git blame`, and a
           # depth-1 checkout has no history for them to read — the blame-based
