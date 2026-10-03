@@ -4,7 +4,7 @@ defmodule BeamTestbed.MixProject do
   def project do
     [
       app: :beam_testbed,
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
