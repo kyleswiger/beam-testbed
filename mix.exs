@@ -56,7 +56,7 @@ defmodule BeamTestbed.MixProject do
        depth: 1},
       {:daisyui,
        github: "saadeghi/daisyui",
-       tag: "v5.7.43",
+       tag: "v5.7.47",
        sparse: "packages/bundle",
        app: false,
        compile: false,
